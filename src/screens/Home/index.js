@@ -10,7 +10,7 @@ export default function App() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>MotoNews</Text>
-        <Element3 color={colors.black()} variant="Bold" size={24} />
+        <Element3 color={colors.black()} variant="Bulk" size={24} />
       </View>
       <View style={styles.listCategory}>
         <FlatListCategory />

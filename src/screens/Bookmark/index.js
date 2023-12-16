@@ -9,7 +9,7 @@ const Bookmark = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Your Bookmarks</Text>
-        <Add color={colors.black()} variant="Linear" size={24} />
+        <Add color={colors.white()} variant="Bulk" size={24} />
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{paddingHorizontal:24, gap:10, paddingVertical:10}}>
@@ -37,11 +37,12 @@ const styles = StyleSheet.create({
     elevation: 8,
     paddingTop: 8,
     paddingBottom: 4,
+    backgroundColor: colors.red(),
   },
   title: {
     fontSize: 20,
     fontFamily: fontType['Pjs-ExtraBold'],
-    color: colors.black(),
+    color: colors.white(),
     letterSpacing: -0.3,
   },
 });

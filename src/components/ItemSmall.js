@@ -1,12 +1,14 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {Receipt21, Clock, Message} from 'iconsax-react-native';
 import React from 'react';
-import { fontType, colors } from '../assets/theme';
+import {fontType, colors} from '../assets/theme';
+import {useNavigation} from '@react-navigation/native';
 
 const ItemSmall = ({item}) => {
+  const navigation = useNavigation();
   return (
-    <View style={styles.cardItem}>
+    <TouchableOpacity style={styles.cardItem} onPress={() => navigation.navigate('BlogDetail', {blogId: item.id})}>
       <FastImage
         style={styles.cardImage}
         source={{
@@ -20,30 +22,22 @@ const ItemSmall = ({item}) => {
         <View
           style={{
             flexDirection: 'row',
-            gap:30
+            gap: 30,
           }}>
-          <View style={{gap: 5, flex:1}}>
+          <View style={{gap: 5, flex: 1}}>
             <Text style={styles.cardCategory}>{item.category}</Text>
             <Text style={styles.cardTitle}>{item.title}</Text>
           </View>
-          <Receipt21
-            color={colors.grey(0.6)}
-            variant="Linear"
-            size={20}
-          />
+          <Receipt21 color={colors.grey(0.6)} variant="Linear" size={20} />
         </View>
         <View style={styles.cardInfo}>
           <Clock size={10} variant="Linear" color={colors.grey(0.6)} />
           <Text style={styles.cardText}>{item.createdAt}</Text>
-          <Message
-            size={10}
-            variant="Linear"
-            color={colors.grey(0.6)}
-          />
+          <Message size={10} variant="Linear" color={colors.grey(0.6)} />
           <Text style={styles.cardText}>{item.totalComments}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

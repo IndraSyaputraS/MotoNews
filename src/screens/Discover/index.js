@@ -44,7 +44,7 @@ const Discover = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.bar}>
-          <SearchNormal1 size={18} color={colors.grey(0.5)} variant="Linear" />
+          <SearchNormal1 size={18} color={colors.black(0.5)} variant="Linear" />
           <Text style={styles.placeholder}>Search</Text>
         </View>
       </View>
@@ -82,20 +82,21 @@ const styles = StyleSheet.create({
     elevation: 8,
     paddingTop: 8,
     paddingBottom: 4,
+    backgroundColor: colors.red(),
   },
   bar: {
     flexDirection: 'row',
     padding: 10,
     gap: 10,
     alignItems: 'center',
-    backgroundColor: colors.grey(0.05),
+    backgroundColor: colors.white(),
     borderRadius: 10,
     flex: 1,
   },
   placeholder: {
     fontSize: 14,
     fontFamily: fontType['Pjs-Medium'],
-    color: colors.grey(0.5),
+    color: colors.black(0.5),
     lineHeight: 18,
   },
 });
