@@ -1,21 +1,13 @@
-import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator} from 'react-native';
 import {ArrowLeft} from 'iconsax-react-native';
 import {useNavigation} from '@react-navigation/native';
 import {fontType, colors} from '../../assets/theme';
 import axios from 'axios';
 
-const AddBlogForm = () => {
-  const [loading, setLoading] = useState(false);
-  const dataCategory = [
+const EditBlogForm = ({route}) => {
+const {blogId} = route.params;
+const dataCategory = [
     {id: 1, name: 'Formula 1'},
     {id: 2, name: 'Rally'},
     {id: 3, name: 'WEC'},
@@ -39,17 +31,41 @@ const AddBlogForm = () => {
   };
   const [image, setImage] = useState(null);
   const navigation = useNavigation();
-  const handleUpload = async () => {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    getBlogById();
+  }, [blogId]);
+
+  const getBlogById = async () => {
+    try {
+      const response = await axios.get(
+        `https://657f019e9d10ccb465d5bff0.mockapi.io/motonews/blog/${blogId}`,
+      );
+      setBlogData({
+        title : response.data.title,
+        content : response.data.content,
+        category : {
+            id : response.data.category.id,
+            name : response.data.category.name
+        }
+      })
+    setImage(response.data.image)
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleUpdate = async () => {
     setLoading(true);
     try {
-      await axios.post('https://657f019e9d10ccb465d5bff0.mockapi.io/motonews/blog', {
+      await axios
+        .put(`https://657f019e9d10ccb465d5bff0.mockapi.io/motonews/blog/${blogId}`, {
           title: blogData.title,
           category: blogData.category,
           image,
           content: blogData.content,
-          totalLikes: blogData.totalLikes,
           totalComments: blogData.totalComments,
-          createdAt: new Date(),
+          totalLikes: blogData.totalLikes,
         })
         .then(function (response) {
           console.log(response);
@@ -63,14 +79,15 @@ const AddBlogForm = () => {
       console.log(e);
     }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <ArrowLeft color={colors.white()} variant="Linear" size={24} />
+          <ArrowLeft color={colors.black()} variant="Linear" size={24} />
         </TouchableOpacity>
         <View style={{flex: 1, alignItems: 'center'}}>
-          <Text style={styles.title}>Write blog</Text>
+          <Text style={styles.title}>Edit blog</Text>
         </View>
       </View>
       <ScrollView
@@ -144,8 +161,8 @@ const AddBlogForm = () => {
         </View>
       </ScrollView>
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.button} onPress={handleUpload}>
-          <Text style={styles.buttonLabel}>Upload</Text>
+        <TouchableOpacity style={styles.button} onPress={handleUpdate}>
+          <Text style={styles.buttonLabel}>Update</Text>
         </TouchableOpacity>
       </View>
       {loading && (
@@ -157,7 +174,7 @@ const AddBlogForm = () => {
   );
 };
 
-export default AddBlogForm;
+export default EditBlogForm;
 
 const styles = StyleSheet.create({
   container: {
@@ -172,12 +189,11 @@ const styles = StyleSheet.create({
     elevation: 8,
     paddingTop: 8,
     paddingBottom: 4,
-    backgroundColor: colors.red(),
   },
   title: {
     fontFamily: fontType['Pjs-Bold'],
     fontSize: 16,
-    color: colors.white(),
+    color: colors.black(),
   },
   bottomBar: {
     backgroundColor: colors.white(),
@@ -197,7 +213,7 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: colors.red(),
+    backgroundColor: colors.blue(),
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
