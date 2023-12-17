@@ -1,24 +1,18 @@
-import React, {useState} from 'react';
-import {ScrollView, StyleSheet, Text, View, FlatList, TouchableOpacity} from 'react-native';
-import {Element3} from 'iconsax-react-native';
-import {BlogList, CategoryList} from '../../../data';
-import { fontType, colors } from '../../assets/theme';
-import { ListHorizontal, ItemSmall } from '../../components';
-
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>MotoNews</Text>
-        <Element3 color={colors.black()} variant="Bulk" size={24} />
-      </View>
-      <View style={styles.listCategory}>
-        <FlatListCategory />
-      </View>
-      <ListBlog />
-    </View>
-  );
-}
+import React, {useState, useEffect} from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
+import {Notification} from 'iconsax-react-native';
+import {CategoryList} from '../../../data';
+import {ItemSmall, ListHorizontal} from '../../components';
+import {fontType, colors} from '../../assets/theme';
+import firestore from '@react-native-firebase/firestore';
 const ItemCategory = ({item, onPress, color}) => {
   return (
     <TouchableOpacity onPress={onPress}>
@@ -31,7 +25,7 @@ const ItemCategory = ({item, onPress, color}) => {
 const FlatListCategory = () => {
   const [selected, setSelected] = useState(1);
   const renderItem = ({item}) => {
-    const color = item.id === selected ? colors.red() : colors.grey();
+    const color = item.id === selected ? colors.blue() : colors.grey();
     return (
       <ItemCategory
         item={item}
@@ -52,22 +46,63 @@ const FlatListCategory = () => {
     />
   );
 };
-const ListBlog = () => {
-  const horizontalData = BlogList.slice(0, 5);
-  const verticalData = BlogList.slice(5);
+
+const Home = () => {
+  const [loading, setLoading] = useState(true);
+  const [blogData, setBlogData] = useState([]);
+  useEffect(() => {
+    const fetchBlogData = () => {
+      try {
+        const blogCollection = firestore().collection('blog');
+        const unsubscribeBlog = blogCollection.onSnapshot(querySnapshot => {
+          const blogs = querySnapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          setBlogData(blogs);
+          setLoading(false);
+        });
+
+        return () => {
+          unsubscribeBlog();
+        };
+      } catch (error) {
+        console.error('Error fetching blog data:', error);
+      }
+    };
+    fetchBlogData();
+  }, []);
+
+  const horizontalData = blogData.slice(0, 5);
+  const verticalData = blogData.slice(5);
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.listBlog}>
-        <ListHorizontal data={horizontalData} />
-        <View style={styles.listCard}>
-          {verticalData.map((item, index) => (
-            <ItemSmall item={item} key={index} />
-          ))}
-        </View>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>MotoNews</Text>
+        <Notification color={colors.white()} variant="Linear" size={24} />
       </View>
-    </ScrollView>
+      <View style={styles.listCategory}>
+        <FlatListCategory />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {loading ? (
+            <ActivityIndicator size={'large'} color={colors.blue()} />
+          ) : (
+            <View style={styles.listBlog}>
+              <ListHorizontal data={horizontalData} />
+              <View style={styles.listCard}>
+                {verticalData.map((item, index) => (
+                  <ItemSmall item={item} key={index} />
+                ))}
+              </View>
+            </View>
+          )}
+        </ScrollView>
+      </View>
+    </View>
   );
 };
+
+export default Home;
 
 const styles = StyleSheet.create({
   container: {
@@ -79,10 +114,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
-    height:52,
+    height: 52,
     elevation: 8,
-    paddingTop:8,
-    paddingBottom:4,
+    paddingTop: 8,
+    paddingBottom: 4,
     backgroundColor: colors.red(),
   },
   title: {
