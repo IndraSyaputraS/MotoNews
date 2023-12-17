@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "331839791383",
+    "project_id": "motonews-5d26b",
+    "storage_bucket": "motonews-5d26b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:331839791383:android:2d326cab27bc4ecb729752",
+        "android_client_info": {
+          "package_name": "com.motonews"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqwG9KJkjNfAsRdeMl6Y1tRJ5JWZLP3X0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
