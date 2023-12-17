@@ -31,7 +31,7 @@ const ItemCategory = ({item, onPress, color}) => {
 const FlatListCategory = () => {
   const [selected, setSelected] = useState(1);
   const renderItem = ({item}) => {
-    const color = item.id === selected ? colors.blue() : colors.grey();
+    const color = item.id === selected ? colors.red() : colors.grey();
     return (
       <ItemCategory
         item={item}
